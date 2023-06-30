@@ -47,13 +47,18 @@ public class Utils {
             if (resultSetCount.getInt("count") > 0) {
                 String selectQuery = "SELECT * FROM produtos";
                 ResultSet resultSet = statement.executeQuery(selectQuery);
-                System.out.println("id | Nome         |       Preço | Estoque ");
+
+                System.out.print("\n--------------------------------------------------");
+                System.out.printf("%n%-" + 5 + "s %-" + 20 + "s %-" + 15 + "s %-" + 5 + "s%n",
+                        "id", "Nome", "Preço", "Estoque");
+                System.out.println("--------------------------------------------------");
 
                 while (resultSet.next()) {
-                    System.out.print(resultSet.getInt(1) + "   " + resultSet.getString(2) +
-                            "       " + resultSet.getFloat(3) + "   " + resultSet.getInt(4) +
-                            "\n");
+                    System.out.printf("%-" + 5 + "d %-" + 20 + "s %-" + 15 + ".2f %-" + 5 + "d%n",
+                            resultSet.getInt(1), resultSet.getString(2),
+                            resultSet.getFloat(3), resultSet.getInt(4));
                 }
+                System.out.println("--------------------------------------------------");
                 resultSet.close();
             } else {
                 System.out.println("\nNão existem produtos cadastrados!");
@@ -71,7 +76,36 @@ public class Utils {
 
 
     public static void insert() {
-        System.out.println("Inserindo produtos...");
+        System.out.print("\nDigite o nome do produto: ");
+        String name = scanner.nextLine();
+
+        System.out.print("\nDigite o preço do produto: R$");
+        float price = scanner.nextFloat();
+
+        System.out.print("\nDigite a quantidade em estoque: ");
+        int number = scanner.nextInt();
+
+        scanner.nextLine(); // Consume a quebra de linha, para evitar que o menu apareça sozinho.
+
+        String insertQuery = "INSERT INTO produtos (nome, preco, estoque) VALUES (?, ?, ?)"; // Prevenindo o SQL Injection
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+
+            preparedStatement.setString(1, name);
+            preparedStatement.setFloat(2, price);
+            preparedStatement.setInt(3, number);
+
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+
+            System.out.printf("%nO produto '%s' foi inserido com sucesso!%n", name);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("\nErro ao salvar produto.");
+            System.exit(-42);
+        }
     }
 
     public static void update() {
@@ -83,7 +117,7 @@ public class Utils {
     }
 
     public static void menu() {
-        System.out.println("==================Gerenciamento de Produtos===============");
+        System.out.println("\n==================Gerenciamento de Produtos===============");
         System.out.println("Selecione uma opção: ");
         System.out.println("1 - Listar produtos.");
         System.out.println("2 - Inserir produtos.");
