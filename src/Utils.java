@@ -40,33 +40,33 @@ public class Utils {
         try {
             String countQuery = "SELECT COUNT(*) AS count FROM produtos"; // Conta quantas linhas existem na tabela
             Statement statement = connection.createStatement();
-            ResultSet resultSetCount = statement.executeQuery(countQuery);
+            ResultSet countSet = statement.executeQuery(countQuery);
 
-            resultSetCount.next();
+            countSet.next();
 
-            if (resultSetCount.getInt("count") > 0) {
+            if (countSet.getInt("count") > 0) {
                 String selectQuery = "SELECT * FROM produtos";
-                ResultSet resultSet = statement.executeQuery(selectQuery);
+                ResultSet selectSet = statement.executeQuery(selectQuery);
 
                 System.out.print("\n--------------------------------------------------");
                 System.out.printf("%n%-" + 5 + "s %-" + 20 + "s %-" + 15 + "s %-" + 5 + "s%n",
                         "id", "Nome", "Preço", "Estoque");
                 System.out.println("--------------------------------------------------");
 
-                while (resultSet.next()) {
+                while (selectSet.next()) {
                     System.out.printf("%-" + 5 + "d %-" + 20 + "s %-" + 15 + ".2f %-" + 5 + "d%n",
-                            resultSet.getInt(1), resultSet.getString(2),
-                            resultSet.getFloat(3), resultSet.getInt(4));
+                            selectSet.getInt(1), selectSet.getString(2),
+                            selectSet.getFloat(3), selectSet.getInt(4));
                 }
                 System.out.println("--------------------------------------------------");
-                resultSet.close();
+
+                selectSet.close();
             } else {
                 System.out.println("\nNão existem produtos cadastrados!");
             }
 
+            countSet.close();
             statement.close();
-            resultSetCount.close();
-
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("\nErro ao buscar produtos.");
