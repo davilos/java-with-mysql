@@ -165,7 +165,6 @@ public class Utils {
 
     public static void delete() {
         String deleteQuery = "DELETE FROM produtos WHERE id=?";
-        // String searchQuery = "SELECT * FROM produtos WHERE id=?";
         String countQuery = "SELECT COUNT(*) AS count FROM produtos WHERE id=?";
 
         System.out.print("\nDigite o código do produto: ");
