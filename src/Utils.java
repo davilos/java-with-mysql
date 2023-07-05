@@ -109,24 +109,22 @@ public class Utils {
     }
 
     public static void update() {
+        String countQuery = "SELECT COUNT(*) AS count FROM produtos WHERE id=?";
+
         System.out.print("\nDigite o código do produto: ");
         int id = Integer.parseInt(scanner.nextLine());
 
-        String searchQuery = "SELECT * FROM produtos WHERE id=?";
-
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(searchQuery,
-                    ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            preparedStatement.setInt(1, id);
+            PreparedStatement countStatement = connection.prepareStatement(countQuery);
+            countStatement.setInt(1, id);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet countSet = countStatement.executeQuery();
 
-            resultSet.last();
-            int row = resultSet.getRow(); // Retorna o número da última linha (0 se não exista linhas).
+            countSet.next();
 
-            resultSet.beforeFirst();
+            if (countSet.getInt("count") > 0) {
+                String updateQuery = "UPDATE produtos SET nome=?, preco=?, estoque=? WHERE id=?";
 
-            if (row > 0) {
                 System.out.print("\nDigite o nome do produto: ");
                 String name = scanner.nextLine();
 
@@ -138,19 +136,18 @@ public class Utils {
 
                 scanner.nextLine(); // Consume a quebra de linha, para evitar que o menu apareça sozinho.
 
-                String updateQuery = "UPDATE produtos SET nome=?, preco=?, estoque=? WHERE id=?";
+                PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
 
-                PreparedStatement preparedStatement1 = connection.prepareStatement(updateQuery);
+                updateStatement.setString(1, name);
+                updateStatement.setFloat(2, price);
+                updateStatement.setInt(3, number);
+                updateStatement.setInt(4, id);
 
-                preparedStatement1.setString(1, name);
-                preparedStatement1.setFloat(2, price);
-                preparedStatement1.setInt(3, number);
-                preparedStatement1.setInt(4, id);
+                updateStatement.executeUpdate();
 
-                preparedStatement1.executeUpdate();
-
-                preparedStatement.close();
-                preparedStatement1.close();
+                countStatement.close();
+                countSet.close();
+                updateStatement.close();
 
                 System.out.printf("%nO produto '%s' foi atualizado com sucesso!%n", name);
             } else {
