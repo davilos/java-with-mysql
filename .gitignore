@@ -28,12 +28,9 @@ out/
 .settings
 .springBeans
 .sts4-cache
-<<<<<<< HEAD
-=======
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
->>>>>>> 5e0e8c790cc931fb4798445c0417dc33053f6c1a
 
 ### NetBeans ###
 /nbproject/private/
@@ -41,12 +38,9 @@ bin/
 /dist/
 /nbdist/
 /.nb-gradle/
-<<<<<<< HEAD
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
-=======
->>>>>>> 5e0e8c790cc931fb4798445c0417dc33053f6c1a
 
 ### VS Code ###
 .vscode/
